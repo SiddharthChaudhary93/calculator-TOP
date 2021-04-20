@@ -69,7 +69,9 @@ function operate(op){
     }
     if(op.indexOf('-') >-1){
         operation = 4;
+        
     }
+    
     memory=current;
     current='';
     // console.log(`memory=${memory}`);
@@ -93,7 +95,6 @@ function plusMinus(){
     }else{
         current = '-' + current;
     }
-    
     display.innerHTML=current;
 }
 
@@ -116,7 +117,7 @@ clear.addEventListener('click',clearAll);
 //calculate
 function calculate(){
     // console.log(eval(memory));
-    if (eval(memory)){//check to see if memory is empty or not
+    if (eval(memory) || memory === '0'){//check to see if memory is empty or not
         let op='';
         if( operation === 1){
             op='*';
@@ -159,11 +160,14 @@ function fixDisplay(){
     display.innerHTML=current;
 }
 
+display.addEventListener('change',fixDisplay);
+
+
 window.addEventListener('load',function(){
     display.innerHTML=current;
 });
 
-display.addEventListener('change',fixDisplay);
+
 
 
 
