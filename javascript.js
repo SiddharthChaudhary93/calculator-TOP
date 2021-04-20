@@ -5,13 +5,14 @@ const dot = document.querySelector('.dot');
 const operator = document.querySelectorAll('.blue');
 
 const display = document.querySelector('.present__number');
+const secondaryDisplay = document.querySelector('.previous__operation');
 
 
 const MAXLENGTH = 12;
 var current='0';
 var operation = 0;
 var memory = '0';
-
+var secondDisplayVal='';
 //store the numbers
 function addNum(num){
     console.log(num)
@@ -55,7 +56,9 @@ dot.addEventListener('click',checkDecimal);
 //store the operand
 function operate(op){
     // console.log(op);
+
     if(op.indexOf('*') >-1){
+        display.innerHTML = '*';
         operation = 1;
     }
     if(op.indexOf('/') >-1){
@@ -71,7 +74,7 @@ function operate(op){
     current='';
     // console.log(`memory=${memory}`);
     // console.log(`current=${current}`);
-    display.innerHTML=current;
+    display.innerHTML=op;
 }
 
 
@@ -83,6 +86,7 @@ operator.forEach(operand =>{
 
 
 //positive negative
+//not implemented in the calculator as it looked weird in the layout
 function plusMinus(){
     if(current.indexOf('-') === 0){
         current=current.substr(1);
@@ -99,9 +103,67 @@ function clearAll(){
     current='0';
     operation=0;
     memory='0';
+    secondDisplayVal='';
+    secondaryDisplay.innerHTML = secondDisplayVal;
     display.innerHTML=current;
     console.log(`All clear`);
 
 }
 
 clear.addEventListener('click',clearAll);
+
+
+//calculate
+function calculate(){
+    // console.log(eval(memory));
+    if (eval(memory)){//check to see if memory is empty or not
+        let op='';
+        if( operation === 1){
+            op='*';
+            secondDisplayVal = memory + op + current + '=';
+            current = eval(memory) * eval(current);
+        }
+        if( operation === 2){
+            op='/';
+            secondDisplayVal = memory + op + current + '=';
+            current = eval(memory) / eval(current);
+        }
+        if( operation === 3){
+            op='+';
+            secondDisplayVal = memory + op + current + '=';
+            current = eval(memory) + eval(current);
+        }
+        if( operation === 4){
+            op='-';
+            secondDisplayVal = memory + op + current + '=';
+            current = eval(memory) - eval(current);
+        }
+        secondaryDisplay.innerHTML = secondDisplayVal;
+        operation=0;
+        memory='0';
+        display.innerHTML=current;
+    }
+}
+
+equals.addEventListener('click',calculate);
+
+//fix display
+
+function fixDisplay(){
+    current = display.innerHTML;
+    console.log(`current val${current}`);
+    current += '' + parseFloat(current);
+    if(current.indexOf('NaN') != -1){
+        current = `Aargh! What?`;
+    };
+    display.innerHTML=current;
+}
+
+window.addEventListener('load',function(){
+    display.innerHTML=current;
+});
+
+display.addEventListener('change',fixDisplay);
+
+
+
